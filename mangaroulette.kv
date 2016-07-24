@@ -1,0 +1,16 @@
+Widget:	
+	RelativeLayout:	
+		canvas.before:
+			Color:
+				rgba: 1, 1, 1, 1
+			Rectangle:
+				pos: self.parent.pos
+				size: self.parent.size
+		pos: self.parent.pos
+		size: self.parent.size
+		Button:			
+			id: test
+			size_hint: 0.25, 0.25
+			text: 'check'
+			color: 1, 0, 0, 1
+			pos_hint: {'center_x':0.5, 'center_y':0.75}
