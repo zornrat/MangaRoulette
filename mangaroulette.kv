@@ -1,16 +1,126 @@
-Widget:	
-	RelativeLayout:	
-		canvas.before:
-			Color:
-				rgba: 1, 1, 1, 1
-			Rectangle:
-				pos: self.parent.pos
-				size: self.parent.size
+<GenToggle@ToggleButton>:
+    size_hint: 0.1, 0.15
+    font_size: 12
+
+<RootWidget@Widget>:
+	RelativeLayout:
 		pos: self.parent.pos
 		size: self.parent.size
-		Button:			
-			id: test
-			size_hint: 0.25, 0.25
-			text: 'check'
-			color: 1, 0, 0, 1
-			pos_hint: {'center_x':0.5, 'center_y':0.75}
+		Button:
+			id: startSpin
+			size_hint: 0.15, 0.15
+			font_size: 48
+			text: 'Spin'
+			pos_hint: {'center_x':0.5, 'center_y':0.90}
+		StackLayout:
+		    pos_hint: {'center_x':0.5, 'center_y': 0.5}
+            size_hint: 0.75, 0.5
+            Spinner:
+                id: statusSpinner
+                values: 'Select Status', 'Ongoing', 'Finished'
+                text: self.values[0]
+                size_hint: 0.3,0.1
+            Spinner:
+                size_hint: 0.5, 0.1
+		StackLayout:
+		    size_hint: 1, 0.25
+		    pos_hint: {'center_x':0.5, 'center_y':0.05}
+            GenToggle:
+                id: Action
+                text: 'Action'
+            GenToggle:
+                id: Adult
+                text: 'Adult'
+            GenToggle:
+                id: Adventure
+                text: 'Adventure'
+            GenToggle:
+                id: Comedy
+                text: 'Comedy'
+            GenToggle:
+                id: Doujinshi
+                text: 'Doujinshi'
+            GenToggle:
+                id: Drama
+                text: 'Drama'
+            GenToggle:
+                id: Ecchi
+                text: 'Ecchi'
+            GenToggle:
+                id: Fantasy
+                text: 'Fantasy'
+            GenToggle:
+                id: GenderBender
+                text: 'Gender Bender'
+            GenToggle:
+                id: Harem
+                text: 'Harem'
+            GenToggle:
+                id: Historical
+                text: 'Historical'
+            GenToggle:
+                id: Horror
+                text: 'Horror'
+            GenToggle:
+                id: Josei
+                text: 'Josei'
+            GenToggle:
+                id: MartialArts
+                text: 'Martial Arts'
+            GenToggle:
+                id: Matrue
+                text: 'Mature'
+            GenToggle:
+                id: Mecha
+                text: 'Mecha'
+            GenToggle:
+                id: Mystery
+                text: 'Mystery'
+            GenToggle:
+                id: OneShot
+                text: 'One Shot'
+            GenToggle:
+                id: Psychological
+                text: 'Psychological'
+            GenToggle:
+                id: Romance
+                text: 'Romance'
+            GenToggle:
+                id: SchooLife
+                text: 'School Life'
+            GenToggle:
+                id: SciFi
+                text: 'Sci-fi'
+            GenToggle:
+                id: Seinen
+                text: 'Seinen'
+            GenToggle:
+                id: Shoujo
+                text: 'Shoujo'
+            GenToggle:
+                id: Shounen
+                text: 'Shounen'
+            GenToggle:
+                id: SliceOfLife
+                text: 'Slice of Life'
+            GenToggle:
+                id: Smut
+                text: 'Smut'
+            GenToggle:
+                id: Sports
+                text: 'Sports'
+            GenToggle:
+                id: Supernatural
+                text: 'Supernatural'
+            GenToggle:
+                id: Tragedy
+                text: 'Tragedy'
+            GenToggle:
+                id: Webtoons
+                text: 'Webtoons'
+            GenToggle:
+                id: Yaoi
+                text: 'Yaoi'
+            GenToggle:
+                id: Yuri
+                text: 'Yuri'
