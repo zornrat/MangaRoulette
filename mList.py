@@ -15,6 +15,8 @@ from scipy.stats import scoreatpercentile
 from kivy.uix.widget import Widget
 import threading
 from kivy.lang import Builder
+from kivy.uix.popup import Popup
+from kivy.uix.label import Label
 
 
 class RootWidget(Widget):
@@ -22,29 +24,32 @@ class RootWidget(Widget):
 
     def spin(self):
 
-        args = []
+        if self.ids.startSpin.text != 'Working...':
 
-        for genre in self.genreStatus.keys():
-            if self.genreStatus[genre] == 'down':
-                args.append("--genre")
-                args.append(genre)
+            args = []
 
-        if self.ids.statusSpinner.text == 'Ongoing':
-            args.append("--status")
-            args.append("1")
-        elif self.ids.statusSpinner.text == 'Finished':
-            args.append("--status")
-            args.append("2")
+            for genre in self.genreStatus.keys():
+                if self.genreStatus[genre] == 'down':
+                    args.append("--genre")
+                    args.append(genre)
 
-        if self.ids.popSpinner.text != 'Select Popularity':
-            args.append("--popularity")
-            args.append(self.ids.popSpinner.text)
+            if self.ids.statusSpinner.text == 'Ongoing':
+                args.append("--status")
+                args.append("1")
+            elif self.ids.statusSpinner.text == 'Finished':
+                args.append("--status")
+                args.append("2")
 
-        self.ids.startSpin.font_size = 72
-        self.ids.startSpin.text = 'Working...'
+            if self.ids.popSpinner.text != 'Select Popularity':
+                args.append("--popularity")
+                args.append(self.ids.popSpinner.text)
 
-        spinThread = threading.Thread(target=self.mList, args=[args])
-        spinThread.start()
+            self.ids.startSpin.font_size = 72
+            self.ids.startSpin.text = 'Working...'
+
+            spinThread = threading.Thread(target=self.mList, args=[args])
+            spinThread.start()
+
 
         return self
 
@@ -71,7 +76,7 @@ class RootWidget(Widget):
         try:
             opts, args = getopt.getopt(argv[0:], "g:s:b:a:p:",
                                        ["genre=", "status=", "before=", "after=", "popularity="])
-        except getopt.GetoptError:
+        except:
             raise Exception('Invalid argument usage\n')
 
         genres = []
@@ -113,9 +118,12 @@ class RootWidget(Widget):
             conn = httplib.HTTPSConnection("www.mangaeden.com")
             conn.request("GET", "/api/list/0/")
             r1 = conn.getresponse()
-        except httplib.HTTPException:
-            raise Exception(
-                'Failed http connection: Mangaeden might be down or you may not have internet connectivity\n')
+        except:
+            exceptionPopup = Popup(title='Connectivity Error:', size_hint=[0.75,0.75],
+                                   content= Label(text='Cannot connect to the internet\nor MangaEden may be down.', font_size = 40))
+            self.spinEnd()
+            exceptionPopup.open()
+            return
 
         manList = json.loads(r1.read())
         yList = []
@@ -173,8 +181,13 @@ class RootWidget(Widget):
                     "http://www.mangaeden.com/en/en-manga/" + urllib.quote_plus(random.choice(yList)))
                 self.spinEnd()
 
-            except webbrowser.Error:
-                raise Exception("Browser Control Error: failed to open new browser tab\n")
+            except:
+                exceptionPopup = Popup(title='Browser Open Error:', size_hint=[0.75, 0.75],
+                                       content=Label(text='Failed to open new browser tab.',
+                                                     font_size=40))
+                self.spinEnd()
+                exceptionPopup.open()
+                return
 
         else:
             self.spinEnd("No Results. Try again?")
