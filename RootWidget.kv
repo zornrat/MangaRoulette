@@ -1,0 +1,167 @@
+<GenToggle@ToggleButton>:
+    size_hint: 0.2, 0.105
+    font_size: 20
+
+<MyRootWidget@RootWidget>:
+    RelativeLayout:
+        pos: self.parent.pos
+        size: self.parent.size
+        Button:
+            id: startSpin
+            size_hint: 0.5, 0.15
+            font_size: 72
+            text: 'Spin'
+            pos_hint: {'center_x':0.5, 'center_y':0.90}
+            on_release: root.spin()
+        Spinner:
+            id: statusSpinner
+            values: 'Select Status', 'Ongoing', 'Finished'
+            text: self.values[0]
+            size_hint: 0.2, 0.075
+            pos_hint: {'center_x':0.75, 'center_y':0.725}
+            font_size: 20
+        Spinner:
+            id: popSpinner
+            size_hint: 0.2, 0.075
+            pos_hint: {'center_x':0.25, 'center_y':0.725}
+            values: 'Select Popularity', 'Low', 'Medium', 'High'
+            text: self.values[0]
+            font_size: 20
+        StackLayout:
+            size_hint: 1, 0.75
+            pos_hint: {'center_x':0.5, 'center_y':0.25}
+            spacing: 5,5
+            GenToggle:
+                id: Action
+                text: 'Action'
+                on_press: root.genreStatus[self.text] = self.state
+            GenToggle:
+                id: Adult
+                text: 'Adult'
+                on_press: root.genreStatus[self.text] = self.state
+            GenToggle:
+                id: Adventure
+                text: 'Adventure'
+                on_press: root.genreStatus[self.text] = self.state
+            GenToggle:
+                id: Comedy
+                text: 'Comedy'
+                on_press: root.genreStatus[self.text] = self.state
+            GenToggle:
+                id: Doujinshi
+                text: 'Doujinshi'
+                on_press: root.genreStatus[self.text] = self.state
+            GenToggle:
+                id: Drama
+                text: 'Drama'
+                on_press: root.genreStatus[self.text] = self.state
+            GenToggle:
+                id: Ecchi
+                text: 'Ecchi'
+                on_press: root.genreStatus[self.text] = self.state
+            GenToggle:
+                id: Fantasy
+                text: 'Fantasy'
+                on_press: root.genreStatus[self.text] = self.state
+            GenToggle:
+                id: 'Gender Bender'
+                text: 'Gender Bender'
+                on_press: root.genreStatus[self.text] = self.state
+            GenToggle:
+                id: Harem
+                text: 'Harem'
+                on_press: root.genreStatus[self.text] = self.state
+            GenToggle:
+                id: Historical
+                text: 'Historical'
+                on_press: root.genreStatus[self.text] = self.state
+            GenToggle:
+                id: Horror
+                text: 'Horror'
+                on_press: root.genreStatus[self.text] = self.state
+            GenToggle:
+                id: Josei
+                text: 'Josei'
+                on_press: root.genreStatus[self.text] = self.state
+            GenToggle:
+                id: 'Martial Arts'
+                text: 'Martial Arts'
+                on_press: root.genreStatus[self.text] = self.state
+            GenToggle:
+                id: Matrue
+                text: 'Mature'
+                on_press: root.genreStatus[self.text] = self.state
+            GenToggle:
+                id: Mecha
+                text: 'Mecha'
+                on_press: root.genreStatus[self.text] = self.state
+            GenToggle:
+                id: Mystery
+                text: 'Mystery'
+                on_press: root.genreStatus[self.text] = self.state
+            GenToggle:
+                id: 'One Shot'
+                text: 'One Shot'
+                on_press: root.genreStatus[self.text] = self.state
+            GenToggle:
+                id: Psychological
+                text: 'Psychological'
+                on_press: root.genreStatus[self.text] = self.state
+            GenToggle:
+                id: Romance
+                text: 'Romance'
+                on_press: root.genreStatus[self.text] = self.state
+            GenToggle:
+                id: 'Schoo Life'
+                text: 'School Life'
+                on_press: root.genreStatus[self.text] = self.state
+            GenToggle:
+                id: 'Sci-fi'
+                text: 'Sci-fi'
+                on_press: root.genreStatus[self.text] = self.state
+            GenToggle:
+                id: Seinen
+                text: 'Seinen'
+                on_press: root.genreStatus[self.text] = self.state
+            GenToggle:
+                id: Shoujo
+                text: 'Shoujo'
+                on_press: root.genreStatus[self.text] = self.state
+            GenToggle:
+                id: Shounen
+                text: 'Shounen'
+                on_press: root.genreStatus[self.text] = self.state
+            GenToggle:
+                id: 'Slice of Life'
+                text: 'Slice of Life'
+                on_press: root.genreStatus[self.text] = self.state
+            GenToggle:
+                id: Smut
+                text: 'Smut'
+                on_press: root.genreStatus[self.text] = self.state
+            GenToggle:
+                id: Sports
+                text: 'Sports'
+                on_press: root.genreStatus[self.text] = self.state
+            GenToggle:
+                id: Supernatural
+                text: 'Supernatural'
+                on_press: root.genreStatus[self.text] = self.state
+            GenToggle:
+                id: Tragedy
+                text: 'Tragedy'
+                on_press: root.genreStatus[self.text] = self.state
+            GenToggle:
+                id: Webtoons
+                text: 'Webtoons'
+                on_press: root.genreStatus[self.text] = self.state
+            GenToggle:
+                id: Yaoi
+                text: 'Yaoi'
+                on_press: root.genreStatus[self.text] = self.state
+            GenToggle:
+                id: Yuri
+                text: 'Yuri'
+                on_press: root.genreStatus[self.text] = self.state
+
+MyRootWidget
