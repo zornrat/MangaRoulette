@@ -15,10 +15,6 @@ kivy.require('1.9.1')
 
 class MangaRoulette(App):
     def build(self):
-        Config.set('graphics', 'height', '600')
-        Config.set('graphics', 'width', '800')
-        Config.set('graphics', 'minimum_height', '600')
-        Config.set('graphics', 'minimum_width', '800')
         return myRoot
 
 
