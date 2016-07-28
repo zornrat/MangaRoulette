@@ -7,8 +7,8 @@
 
 import kivy
 from kivy.app import App
-from kivy.config import Config
 from mList import myRoot
+
 
 kivy.require('1.9.1')
 

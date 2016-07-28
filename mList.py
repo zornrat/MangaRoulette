@@ -10,17 +10,28 @@ import urllib
 import getopt
 import datetime
 import webbrowser
-import scipy
-from scipy.stats import scoreatpercentile
+from kivy.uix.button import Button
 from kivy.uix.widget import Widget
 import threading
 from kivy.lang import Builder
 from kivy.uix.popup import Popup
 from kivy.uix.label import Label
+from kivy.utils import platform
+from kivy.config import Config
+from kivy.uix.relativelayout import RelativeLayout
 
 
 class RootWidget(Widget):
+
+    if platform in ('win', 'linux', 'macosx'):
+        Config.set('graphics', 'width', '800')
+        Config.set('graphics', 'height', '600')
+        Config.set('graphics', 'minimum_width', '800')
+        Config.set('graphics', 'minimum_height', '600')
+
     genreStatus = {}
+
+    targetURL = ''
 
     def spin(self):
 
@@ -56,12 +67,34 @@ class RootWidget(Widget):
     def spinEnd(self, message='\0'):
 
         if message != '\0':
-            self.ids.startSpin.font_size = 30
+            self.ids.startSpin.font_size = 20
             self.ids.startSpin.text = message
         else:
             self.ids.startSpin.font_size = 72
             self.ids.startSpin.text = 'Spin'
 
+        return self
+
+    def openInBrowser(self):
+        try:
+            if platform in ('win', 'linux', 'macosx'):
+                webbrowser.open_new_tab(self.targetURL)
+            elif platform == 'android':
+                from jnius import autoclass
+                Context = autoclass('android.content.Context')
+                Intent = autoclass('android.content.Intent')
+                Uri = autoclass('android.net.Uri')
+                PythonActivity = autoclass('org.renpy.android.PythonActivity')
+                activity = PythonActivity.mActivity
+                vibrator = activity.getSystemService(Context.VIBRATOR_SERVICE)
+                vibrator.vibrate(2000)
+                launchBrowser = Intent(Intent.ACTION_VIEW, Uri.parse(self.targetURL))
+                activity.startActivity(launchBrowser)
+        except:
+            exceptionPopup = Popup(title='Browser Open Error:', size_hint=[0.75, 0.75],
+                                   content=Label(text='Failed to open new browser tab.',
+                                                 font_size=30))
+            exceptionPopup.open()
         return self
 
     def mList(self, argv=[]):
@@ -120,7 +153,7 @@ class RootWidget(Widget):
             r1 = conn.getresponse()
         except:
             exceptionPopup = Popup(title='Connectivity Error:', size_hint=[0.75,0.75],
-                                   content= Label(text='Cannot connect to the internet\nor MangaEden may be down.', font_size = 40))
+                                   content= Label(text='Cannot connect to the internet\nor MangaEden may be down.', font_size = 30))
             self.spinEnd()
             exceptionPopup.open()
             return
@@ -132,8 +165,14 @@ class RootWidget(Widget):
             popArray = []
             for m in manList['manga']:
                 popArray.append(int(m['h']))
-            firstThridPercentile = scipy.stats.scoreatpercentile(popArray, 33)
-            secondThirdPercentile = scipy.stats.scoreatpercentile(popArray, 67)
+            if platform in ('win','linux','macosx'):
+                import scipy
+                from scipy.stats import scoreatpercentile
+                firstThirdPercentile = scipy.stats.scoreatpercentile(popArray, 33)
+                secondThirdPercentile = scipy.stats.scoreatpercentile(popArray, 67)
+            elif platform == 'android':
+                firstThirdPercentile = 4055.64
+                secondThirdPercentile = 35938.48
 
         for entries in manList['manga']:
             addit = 1
@@ -163,32 +202,42 @@ class RootWidget(Widget):
 
             if popFlag:
                 if popSetting == "Low":
-                    if entries['h'] > firstThridPercentile:
+                    if entries['h'] > firstThirdPercentile:
                         addit = 0
                 elif popSetting == "Medium":
-                    if entries['h'] <= firstThridPercentile or entries['h'] >= secondThirdPercentile:
+                    if entries['h'] <= firstThirdPercentile or entries['h'] >= secondThirdPercentile:
                         addit = 0
                 elif popSetting == "High":
                     if entries['h'] < secondThirdPercentile:
                         addit = 0
 
             if addit == 1:
-                yList.append(entries['a'])
+                yList.append([entries['a'],entries['t']])
 
         if yList:
-            try:
-                webbrowser.open_new_tab(
-                    "http://www.mangaeden.com/en/en-manga/" + urllib.quote_plus(random.choice(yList)))
-                self.spinEnd()
-
-            except:
-                exceptionPopup = Popup(title='Browser Open Error:', size_hint=[0.75, 0.75],
-                                       content=Label(text='Failed to open new browser tab.',
-                                                     font_size=40))
-                self.spinEnd()
-                exceptionPopup.open()
-                return
-
+            spinResult = random.choice(yList)
+            self.targetURL = "http://www.mangaeden.com/en/en-manga/" + urllib.quote_plus(spinResult[0])
+            self.spinEnd()
+            resultLabel = Label(text=spinResult[1], pos_hint={'center_x':0.5, 'center_y':0.6}, size_hint=[1,0.75], font_size=30)
+            goButton = Button(text='View on MangaEden', valign='middle', halign='center', font_size=20, size_hint=[0.4,0.125], pos_hint={'center_x':0.25, 'center_y':0.1})
+            copyButton = Button(text='Copy to clipboard', valign='middle', halign='center', font_size=20,
+                              size_hint=[0.4, 0.125], pos_hint={'center_x': 0.75, 'center_y': 0.1})
+            def callBrowser(instance):
+                self.openInBrowser()
+                return instance
+            def callCopy(instance):
+                if platform in ('win','linux','macosx'):
+                    import pyperclip
+                    pyperclip.copy(spinResult[1])
+                return instance
+            goButton.bind(on_release=callBrowser)
+            copyButton.bind(on_release=callCopy)
+            popLayout = RelativeLayout()
+            popLayout.add_widget(resultLabel)
+            popLayout.add_widget(goButton)
+            popLayout.add_widget(copyButton)
+            ResultPopup = Popup(title='Result:', size_hint=[0.75, 0.75], content=popLayout)
+            ResultPopup.open()
         else:
             self.spinEnd("No Results. Try again?")
 
