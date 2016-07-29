@@ -32,6 +32,7 @@ class RootWidget(Widget):
     genreStatus = {}
 
     targetURL = ''
+    loopPrepared = False
 
     def spin(self):
 
@@ -229,7 +230,21 @@ class RootWidget(Widget):
                 if platform in ('win','linux','macosx'):
                     import pyperclip
                     pyperclip.copy(spinResult[1])
+                elif platform == 'android':
+                    from jnius import autoclass
+                    Context = autoclass('android.content.Context')
+                    Looper = autoclass('android.os.Looper')
+                    PythonActivity = autoclass('org.renpy.android.PythonActivity')
+                    activity = PythonActivity.mActivity
+                    ClipData = autoclass('android.content.ClipData')
+                    if self.loopPrepared == False:
+                        Looper.prepare()
+                        self.loopPrepared = True
+                    clipboard = activity.getSystemService(Context.CLIPBOARD_SERVICE)
+                    clip = ClipData.newPlainText('myclip',spinResult[1])
+                    clipboard.setPrimaryClip(clip)
                 return instance
+
             goButton.bind(on_release=callBrowser)
             copyButton.bind(on_release=callCopy)
             popLayout = RelativeLayout()
