@@ -82,13 +82,10 @@ class RootWidget(Widget):
                 webbrowser.open_new_tab(self.targetURL)
             elif platform == 'android':
                 from jnius import autoclass
-                Context = autoclass('android.content.Context')
                 Intent = autoclass('android.content.Intent')
                 Uri = autoclass('android.net.Uri')
                 PythonActivity = autoclass('org.renpy.android.PythonActivity')
                 activity = PythonActivity.mActivity
-                vibrator = activity.getSystemService(Context.VIBRATOR_SERVICE)
-                vibrator.vibrate(2000)
                 launchBrowser = Intent(Intent.ACTION_VIEW, Uri.parse(self.targetURL))
                 activity.startActivity(launchBrowser)
         except:
@@ -255,6 +252,7 @@ class RootWidget(Widget):
             ResultPopup.open()
         else:
             self.spinEnd("No Results. Try again?")
+
 
 
 myRoot = Builder.load_file('RootWidget.kv')
