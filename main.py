@@ -16,6 +16,8 @@ kivy.require('1.9.1')
 class MangaRoulette(App):
     def build(self):
         return myRoot
+    def on_pause(self):
+        return True
 
 
 if __name__ == "__main__":
