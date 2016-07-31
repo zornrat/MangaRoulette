@@ -28,6 +28,17 @@ class RootWidget(Widget):
         Config.set('graphics', 'height', '600')
         Config.set('graphics', 'minimum_width', '800')
         Config.set('graphics', 'minimum_height', '600')
+    elif platform == 'android':
+        from jnius import autoclass
+        AndroidActivityInfo = autoclass('android.content.pm.ActivityInfo')
+        PythonActivity = autoclass('org.renpy.android.PythonActivity')
+        activity = PythonActivity.mActivity
+        currentOrientation = activity.getResources().getConfiguration().orientation
+        if currentOrientation == 1:
+            activity.setRequestedOrientation(AndroidActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
+        if currentOrientation == 2:
+            activity.setRequestedOrientation(AndroidActivityInfo.SCREEN_ORIENTATION_LANDSCAPE)
+
 
     genreStatus = {}
 
