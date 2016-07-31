@@ -33,12 +33,13 @@ class RootWidget(Widget):
         AndroidActivityInfo = autoclass('android.content.pm.ActivityInfo')
         PythonActivity = autoclass('org.renpy.android.PythonActivity')
         activity = PythonActivity.mActivity
-        currentOrientation = activity.getResources().getConfiguration().orientation
-        if currentOrientation == 1:
-            activity.setRequestedOrientation(AndroidActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
-        if currentOrientation == 2:
-            activity.setRequestedOrientation(AndroidActivityInfo.SCREEN_ORIENTATION_LANDSCAPE)
-
+        InitOrientation = activity.getResources().getConfiguration().orientation
+        if InitOrientation in (1,3):
+            activity.setRequestedOrientation(AndroidActivityInfo.SCREEN_ORIENTATION_USER_PORTRAIT)
+        elif InitOrientation in (2, 4):
+            activity.setRequestedOrientation(AndroidActivityInfo.SCREEN_ORIENTATION_USER_LANDSCAPE)
+        else:
+            raise 'Screen Orientation Error'
 
     genreStatus = {}
 
