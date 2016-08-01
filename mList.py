@@ -33,11 +33,12 @@ class RootWidget(Widget):
         Config.set('graphics', 'height', '600')
         Config.set('graphics', 'minimum_width', '800')
         Config.set('graphics', 'minimum_height', '600')
-        
+
     genreStatus = {}
 
     targetURL = ''
     loopPrepared = False
+    manList = []
 
     def spin(self):
 
@@ -150,23 +151,25 @@ class RootWidget(Widget):
             else:
                 raise Exception("Misc arg error\n")
 
-        try:
-            conn = httplib.HTTPSConnection("www.mangaeden.com")
-            conn.request("GET", "/api/list/0/")
-            r1 = conn.getresponse()
-        except:
-            exceptionPopup = Popup(title='Connectivity Error:', size_hint=[0.75,0.75],
-                                   content= Label(text='Cannot connect to the internet\nor MangaEden may be down.', font_size = 30))
-            self.spinEnd()
-            exceptionPopup.open()
-            return
+        if not self.manList:
+            try:
+                conn = httplib.HTTPSConnection("www.mangaeden.com")
+                conn.request("GET", "/api/list/0/")
+                r1 = conn.getresponse()
+            except:
+                exceptionPopup = Popup(title='Connectivity Error:', size_hint=[0.75,0.75],
+                                       content= Label(text='Cannot connect to the internet\nor MangaEden may be down.', font_size = 30))
+                self.spinEnd()
+                exceptionPopup.open()
+                return
 
-        manList = json.loads(r1.read())
+            self.manList = json.loads(r1.read())
+
         yList = []
 
         if popFlag == 1:
             popArray = []
-            for m in manList['manga']:
+            for m in self.manList['manga']:
                 popArray.append(int(m['h']))
             if platform in ('win','linux','macosx'):
                 import scipy
@@ -177,7 +180,7 @@ class RootWidget(Widget):
                 firstThirdPercentile = 4055.64
                 secondThirdPercentile = 35938.48
 
-        for entries in manList['manga']:
+        for entries in self.manList['manga']:
             addit = 1
 
             if genreFlag:
