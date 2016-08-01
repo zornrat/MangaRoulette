@@ -19,6 +19,11 @@ from kivy.uix.label import Label
 from kivy.utils import platform
 from kivy.config import Config
 from kivy.uix.relativelayout import RelativeLayout
+from kivy.properties import NumericProperty
+
+class SpinButton(Button):
+    i = NumericProperty(0)
+    pass
 
 
 class RootWidget(Widget):

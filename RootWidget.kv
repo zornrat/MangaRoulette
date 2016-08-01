@@ -13,20 +13,22 @@
             text: 'Spin'
             pos_hint: {'center_x':0.5, 'center_y':0.90}
             on_release: root.spin()
-        Spinner:
+        SpinButton:
             id: statusSpinner
             values: 'Select Status', 'Ongoing', 'Finished'
-            text: self.values[0]
+            text: self.values[(self.i)%3]
             size_hint: 0.45, 0.075
             pos_hint: {'center_x':0.75, 'center_y':0.725}
             font_size: 20
-        Spinner:
+            on_release: self.i+=1
+        SpinButton:
             id: popSpinner
             size_hint: 0.45, 0.075
             pos_hint: {'center_x':0.25, 'center_y':0.725}
             values: 'Select Popularity', 'Low', 'Medium', 'High'
-            text: self.values[0]
+            text: self.values[(self.i)%4]
             font_size: 20
+            on_release: self.i+=1
         StackLayout:
             size_hint: 1, 0.75
             pos_hint: {'center_x':0.5, 'center_y':0.25}
