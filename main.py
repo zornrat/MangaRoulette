@@ -5,17 +5,18 @@
 # Still need to comment code
 # Do texturing next
 
-import kivy
+from kivy import require
 from kivy.app import App
+
 from mList import myRoot
 
-
-kivy.require('1.9.1')
+require('1.9.1')
 
 
 class MangaRoulette(App):
     def build(self):
         return myRoot
+
     def on_pause(self):
         return True
 

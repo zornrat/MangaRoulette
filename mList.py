@@ -3,23 +3,32 @@
 
 # Remember to write a help message later
 
-import httplib
-import json
-import random
-import urllib
-import getopt
-import datetime
-import webbrowser
-from kivy.uix.button import Button
-from kivy.uix.widget import Widget
-import threading
-from kivy.lang import Builder
-from kivy.uix.popup import Popup
-from kivy.uix.label import Label
-from kivy.utils import platform
+from datetime import date
+from getopt import getopt
+from httplib import HTTPSConnection
+from json import loads
+from random import choice
+from threading import Thread
+from urllib import quote_plus
+from webbrowser import open_new_tab
+
 from kivy.config import Config
-from kivy.uix.relativelayout import RelativeLayout
+from kivy.lang import Builder
 from kivy.properties import NumericProperty
+from kivy.uix.button import Button
+from kivy.uix.label import Label
+from kivy.uix.popup import Popup
+from kivy.uix.relativelayout import RelativeLayout
+from kivy.uix.widget import Widget
+from kivy.utils import platform
+
+if platform in ('win', 'linux', 'macosx'):
+    from scipy.stats import scoreatpercentile
+    from pyperclip import copy
+
+elif platform == 'android':
+    from jnius import autoclass
+
 
 class SpinButton(Button):
     i = NumericProperty(0)
@@ -27,7 +36,6 @@ class SpinButton(Button):
 
 
 class RootWidget(Widget):
-
     if platform in ('win', 'linux', 'macosx'):
         Config.set('graphics', 'width', '800')
         Config.set('graphics', 'height', '600')
@@ -65,9 +73,8 @@ class RootWidget(Widget):
             self.ids.startSpin.font_size = 72
             self.ids.startSpin.text = 'Working...'
 
-            spinThread = threading.Thread(target=self.mList, args=[args])
+            spinThread = Thread(target=self.mList, args=[args])
             spinThread.start()
-
 
         return self
 
@@ -85,9 +92,8 @@ class RootWidget(Widget):
     def openInBrowser(self):
         try:
             if platform in ('win', 'linux', 'macosx'):
-                webbrowser.open_new_tab(self.targetURL)
+                open_new_tab(self.targetURL)
             elif platform == 'android':
-                from jnius import autoclass
                 Intent = autoclass('android.content.Intent')
                 Uri = autoclass('android.net.Uri')
                 PythonActivity = autoclass('org.renpy.android.PythonActivity')
@@ -101,8 +107,10 @@ class RootWidget(Widget):
             exceptionPopup.open()
         return self
 
-    def mList(self, argv=[]):
+    def mList(self, argv=None):
 
+        if argv is None:
+            argv = []
         genreList = ["Action", "Adult", "Adventure", "Comedy", "Doujinshi", "Drama", "Ecchi", "Fantasy",
                      "Gender Bender",
                      "Harem", "Historical", "Horror", "Josei", "Martial Arts", "Mature", "Mecha", "Mystery", "One Shot",
@@ -111,8 +119,8 @@ class RootWidget(Widget):
                      "Smut", "Sports", "Supernatural", "Tragedy", "Webtoons", "Yaoi", "Yuri"]
 
         try:
-            opts, args = getopt.getopt(argv[0:], "g:s:b:a:p:",
-                                       ["genre=", "status=", "before=", "after=", "popularity="])
+            opts, args = getopt(argv[0:], "g:s:b:a:p:",
+                                ["genre=", "status=", "before=", "after=", "popularity="])
         except:
             raise Exception('Invalid argument usage\n')
 
@@ -138,10 +146,10 @@ class RootWidget(Widget):
                     raise Exception('invalid status: should be 1 for "ongoing" or 2 for "completed"\n')
             elif opt in ("-b", "--before"):
                 beforeFlag = 1
-                beforeDate = datetime.date.fromtimestamp(float(arg))
+                beforeDate = date.fromtimestamp(float(arg))
             elif opt in ("-a", "--after"):
                 afterFlag = 1
-                afterDate = datetime.date.fromtimestamp(float(arg))
+                afterDate = date.fromtimestamp(float(arg))
             elif opt in ("-p", "--popularity"):
                 popFlag = 1
                 if arg not in ("Low", "Medium", "High"):
@@ -153,17 +161,18 @@ class RootWidget(Widget):
 
         if not self.manList:
             try:
-                conn = httplib.HTTPSConnection("www.mangaeden.com")
+                conn = HTTPSConnection("www.mangaeden.com")
                 conn.request("GET", "/api/list/0/")
                 r1 = conn.getresponse()
             except:
-                exceptionPopup = Popup(title='Connectivity Error:', size_hint=[0.75,0.75],
-                                       content= Label(text='Cannot connect to the internet\nor MangaEden may be down.', font_size = 30))
+                exceptionPopup = Popup(title='Connectivity Error:', size_hint=[0.75, 0.75],
+                                       content=Label(text='Cannot connect to the internet\nor MangaEden may be down.',
+                                                     font_size=30))
                 self.spinEnd()
                 exceptionPopup.open()
                 return
 
-            self.manList = json.loads(r1.read())
+            self.manList = loads(r1.read())
 
         yList = []
 
@@ -171,11 +180,9 @@ class RootWidget(Widget):
             popArray = []
             for m in self.manList['manga']:
                 popArray.append(int(m['h']))
-            if platform in ('win','linux','macosx'):
-                import scipy
-                from scipy.stats import scoreatpercentile
-                firstThirdPercentile = scipy.stats.scoreatpercentile(popArray, 33)
-                secondThirdPercentile = scipy.stats.scoreatpercentile(popArray, 67)
+            if platform in ('win', 'linux', 'macosx'):
+                firstThirdPercentile = scoreatpercentile(popArray, 33)
+                secondThirdPercentile = scoreatpercentile(popArray, 67)
             elif platform == 'android':
                 firstThirdPercentile = 4055.64
                 secondThirdPercentile = 35938.48
@@ -196,14 +203,14 @@ class RootWidget(Widget):
                 if not entries.has_key('ld'):
                     addit = 0
                 else:
-                    if datetime.date.fromtimestamp(entries['ld']) > beforeDate:
+                    if date.fromtimestamp(entries['ld']) > beforeDate:
                         addit = 0
 
             if afterFlag:
                 if not entries.has_key('ld'):
                     addit = 0
                 else:
-                    if datetime.date.fromtimestamp(entries['ld']) < afterDate:
+                    if date.fromtimestamp(entries['ld']) < afterDate:
                         addit = 0
 
             if popFlag:
@@ -218,35 +225,37 @@ class RootWidget(Widget):
                         addit = 0
 
             if addit == 1:
-                yList.append([entries['a'],entries['t']])
+                yList.append([entries['a'], entries['t']])
 
         if yList:
-            spinResult = random.choice(yList)
-            self.targetURL = "http://www.mangaeden.com/en/en-manga/" + urllib.quote_plus(spinResult[0])
+            spinResult = choice(yList)
+            self.targetURL = "http://www.mangaeden.com/en/en-manga/" + quote_plus(spinResult[0])
             self.spinEnd()
-            resultLabel = Label(text=spinResult[1], pos_hint={'center_x':0.5, 'center_y':0.6}, size_hint=[1,0.75], font_size=30)
-            goButton = Button(text='View on MangaEden', valign='middle', halign='center', font_size=20, size_hint=[0.4,0.125], pos_hint={'center_x':0.25, 'center_y':0.1})
+            resultLabel = Label(text=spinResult[1], pos_hint={'center_x': 0.5, 'center_y': 0.6}, size_hint=[1, 0.75],
+                                font_size=30)
+            goButton = Button(text='View on MangaEden', valign='middle', halign='center', font_size=20,
+                              size_hint=[0.4, 0.125], pos_hint={'center_x': 0.25, 'center_y': 0.1})
             copyButton = Button(text='Copy to clipboard', valign='middle', halign='center', font_size=20,
-                              size_hint=[0.4, 0.125], pos_hint={'center_x': 0.75, 'center_y': 0.1})
+                                size_hint=[0.4, 0.125], pos_hint={'center_x': 0.75, 'center_y': 0.1})
+
             def callBrowser(instance):
                 self.openInBrowser()
                 return instance
+
             def callCopy(instance):
-                if platform in ('win','linux','macosx'):
-                    import pyperclip
-                    pyperclip.copy(spinResult[1])
+                if platform in ('win', 'linux', 'macosx'):
+                    copy(spinResult[1])
                 elif platform == 'android':
-                    from jnius import autoclass
                     Context = autoclass('android.content.Context')
                     Looper = autoclass('android.os.Looper')
                     PythonActivity = autoclass('org.renpy.android.PythonActivity')
                     activity = PythonActivity.mActivity
                     ClipData = autoclass('android.content.ClipData')
-                    if self.loopPrepared == False:
+                    if not self.loopPrepared:
                         Looper.prepare()
                         self.loopPrepared = True
                     clipboard = activity.getSystemService(Context.CLIPBOARD_SERVICE)
-                    clip = ClipData.newPlainText('myclip',spinResult[1])
+                    clip = ClipData.newPlainText('myclip', spinResult[1])
                     clipboard.setPrimaryClip(clip)
                 return instance
 
@@ -260,7 +269,6 @@ class RootWidget(Widget):
             ResultPopup.open()
         else:
             self.spinEnd("No Results. Try again?")
-
 
 
 myRoot = Builder.load_file('RootWidget.kv')
