@@ -7,7 +7,7 @@ title = Manga Roulette
 package.name = mangaroulette
 
 # (str) Package domain (needed for android/ios packaging)
-package.domain = zornrat
+package.domain = zornr.at
 
 # (str) Source code where the main.py live
 source.dir = .
@@ -28,7 +28,7 @@ source.include_exts = py,png,jpg,kv,atlas
 #source.exclude_patterns = license,images/*/*.jpg
 
 # (str) Application versioning (method 1)
-version = 0.1
+version = 1.0
 
 # (str) Application versioning (method 2)
 # version.regex = __version__ = ['"](.*)['"]
@@ -36,7 +36,7 @@ version = 0.1
 
 # (list) Application requirements
 # comma seperated e.g. requirements = sqlite3,kivy
-requirements = sdl,pygame,android,pyjnius,kivy,openssl
+requirements = android,pyjnius,kivy,openssl
 
 # (str) Custom source folders for requirements
 # Sets custom source for any requirements with recipes
@@ -75,7 +75,7 @@ fullscreen = 0
 android.permissions = INTERNET
 
 # (int) Android API to use
-android.api = 23
+android.api = 19
 
 # (int) Minimum API required
 android.minapi = 14
@@ -84,7 +84,7 @@ android.minapi = 14
 android.sdk = 23
 
 # (str) Android NDK version to use
-android.ndk = 10e
+#android.ndk = 9c
 
 # (bool) Use --private data storage (True) or --dir public storage (False)
 #android.private_storage = True
