@@ -10,7 +10,7 @@ Get new Manga/Manhwa/Comics selections at random from [MangaEden](mangaeden.com)
 
 <b>Android:</b>
 
-[APK Installer](https://github.com/zornrat/MangaRoulette/v1.0.1/download/Release/MangaRoulette-1.0.apk)
+[APK Installer](https://github.com/zornrat/MangaRoulette/releases/download/v1.0.1/MangaRoulette-1.0.apk)
 
 Google Play Link Coming Soon
 
