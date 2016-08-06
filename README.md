@@ -4,21 +4,21 @@ Get new Manga/Manhwa/Comics selections at random from [MangaEden](mangaeden.com)
 
 <b>Windows Standalone Packages:</b>
 
-[64-bit Installer](https://github.com/zornrat/MangaRoulette/releases/download/Release/Install_MangaRoulette_x86_64.exe)
+[64-bit Installer](https://github.com/zornrat/MangaRoulette/releases/download/v1.0.1/Install_MangaRoulette_x86_64.exe)
 
-[32-bit Installer](https://github.com/zornrat/MangaRoulette/releases/download/Release/Install_MangaRoulette_x86.exe)
+[32-bit Installer](https://github.com/zornrat/MangaRoulette/releases/download/v1.0.1/Install_MangaRoulette_x86.exe)
 
 <b>Android:</b>
 
-[APK Installer](https://github.com/zornrat/MangaRoulette/releases/download/Release/MangaRoulette-1.0.apk)
+[APK Installer](https://github.com/zornrat/MangaRoulette/v1.0.1/download/Release/MangaRoulette-1.0.apk)
 
 Google Play Link Coming Soon
 
 <b>Source:</b>
 
-[Source Tar](https://github.com/zornrat/MangaRoulette/archive/Release.tar.gz)
+[Source Tar](https://github.com/zornrat/MangaRoulette/archive/v1.0.1.tar.gz)
 
-[Source Zip](https://github.com/zornrat/MangaRoulette/archive/Release.zip)
+[Source Zip](https://github.com/zornrat/MangaRoulette/archive/v1.0.1.zip)
 
 
 <b>Required Python Packages:</b>
