@@ -1,6 +1,6 @@
 # MangaRoulette
 
-Get new Manga/Manhwa/Comics selections at random from mangaeden.com. Narrow your selections by genre, popularity, and publication status. Not affiliated in any way with mangaeden.com. Made using Kivy.
+Get new Manga/Manhwa/Comics selections at random from [MangaEden](mangaeden.com). Narrow your selections by genre, popularity, and publication status. Not affiliated in any way with [MangaEden](mangaeden.com). Made using Kivy.
 
 <b>Windows Standalone Packages:</b>
 
