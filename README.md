@@ -29,3 +29,8 @@ Get new Manga/Manhwa/Comics selections at random from [MangaEden](mangaeden.com)
 [Scipy](https://www.scipy.org/install.html)
 
 [Pyperclip](https://github.com/asweigart/pyperclip)
+
+
+
+
+By Zach Robinson [znrobins@umich.edu]
